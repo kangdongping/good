@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kdp.dao.UserDAO">
+
+    <!-- 注册用户 -->
+    <insert id="insertUser">
+
+    insert into t_user (userName,userEmail,userTel,userPass)
+VALUES(#{userName},#{userEmail},#{userTel},#{userPass});
+
+    </insert>
+
+    <!-- 判断是否重名注册 -->
+	<select id="regName" resultType="user">
+		select * from t_user where  userName = #{userName}
+	</select>
+
+
+
+  <!-- 用户登录 -->
+    <select id="login" resultType="user">
+        select * from t_user where userName = #{userName} and userPass = #{userPass};
+    </select>
+
+    <!-- 根据用户Id修改用户密码 -->
+    <update id="updatePass">
+        UPDATE `t_user`
+        <set>
+            <if test="userName!=null">
+                userName=#{userName},
+            </if>
+
+            <if test="userPass!=null">
+                userPass = #{userPass}
+            </if>
+        </set>
+        WHERE
+        userId = #{userId};
+    </update>
+
+
+    <!-- 根据Id查询用户信息 -->
+    <select id="queryUser" resultType="user">
+		select * from t_user where  userId = #{userId}
+	</select>
+
+    <!-- 根据用户Id修改用户信息 -->
+    <update id="updateUser">
+    UPDATE `t_user`
+    <set>
+        <if test="userName!=null">
+            userName=#{userName},
+        </if>
+        <if test="userEmail!=null">
+            userEmail=#{userEmail},
+        </if>
+        <if test="userTel!=null">
+            userTel = #{userTel}
+        </if>
+     </set>
+ WHERE
+	userId = #{userId};
+    </update>
+
+</mapper>

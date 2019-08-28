@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kdp.dao.ApplyDAO">
+	<resultMap id="myapply" type="Apply">
+		<id property="applyId" column="applyId"></id>
+        <result property="applyName" column="applyName"></result>
+        <result property="applyInfor" column="applyInfor"></result>
+        <result property="applyTel" column="applyTel"></result>
+        <result property="applyImage" column="applyImage"></result>
+	<association property="user" javaType="User">
+		<id property="userId" column="userId"></id>
+		<result property="userName" column="userName"></result>
+	</association>
+
+		<association property="good" javaType="Good">
+			<id property="goodId" column="goodId"></id>
+            <result property="goodName" column="goodName"></result>
+            <result property="goodTel" column="goodTel"></result>
+            <result property="goodDate" column="goodDate"></result>
+		</association>
+
+	</resultMap>
+
+
+    <!-- 根据用户ID查询我申请的物品 -->
+    <select id="queryApply" resultMap="myapply">
+
+          SELECT
+	a.applyId,
+	a.applyImage,
+	a.applyName,
+	a.applyTel,
+	a.applyInfor,
+	g.goodName,
+	g.goodTel,
+	g.goodDate
+FROM
+	t_apply a,
+	t_user u,
+	t_good g
+WHERE
+	a.userId = u.userId
+AND a.goodId = g.goodId
+AND u.userId = #{userId};
+
+
+    </select>
+
+
+
+    <!-- 添加申请信息 -->
+  <insert id="addApply">
+    INSERT INTO `t_apply` (
+	`applyName`,
+	`applyInfor`,
+	`applyTel`,
+	`applyImage`,
+	`userId`,
+	`goodId`
+)
+VALUES
+	(
+		#{applyName},
+		#{applyInfor},
+		#{applyTel},
+		#{applyImage},
+		#{user.userId},
+		#{good.goodId}
+	);
+  </insert>
+
+    <!-- 根据good名字查询信息 -->
+ <select id="queryGoodByName" resultType="good">
+     select * from t_good where goodName=#{goodName};
+ </select>
+
+
+
+</mapper>

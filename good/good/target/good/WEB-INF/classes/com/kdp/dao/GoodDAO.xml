@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kdp.dao.GoodDAO">
+	<resultMap id="mygood" type="good">
+		<id property="goodId" column="goodId"></id>
+		<result property="goodName" column="goodName"></result>
+		<result property="goodInfor" column="goodInfor"></result>
+		<result property="goodTel" column="goodTel"></result>
+		<result property="goodDate" column="goodDate"></result>
+		<result property="goodLocal" column="goodLocal"></result>
+		<result property="goodImage" column="goodImage"></result>
+
+	<association property="user" javaType="User">
+		<id property="userId" column="userId"></id>
+		<result property="userName" column="userName"></result>
+	</association>
+
+		<association property="type" javaType="Type">
+			<id property="typeId" column="typeId"></id>
+			<result property="typeName" column="typeName"></result>
+		</association>
+
+	</resultMap>
+
+	<!-- 搜索查询 -->
+  <select id="search" resultMap="mygood">
+	SELECT *
+	from t_good g,t_user u,t_type t
+		<where>
+			<if test="searchName!=null">
+			g.goodInfor like '%${searchName}%'
+			</if>
+			<if test="searchType!=null">
+			 and t.typeName like '%${searchType}%'
+			</if>
+			<if test="1!=0">
+			and g.userId=u.userId and g.typeId=t.typeId
+            </if>
+		</where>
+  </select>
+
+
+	<!-- 插入失物信息 -->
+	<insert id="fabu">
+	INSERT INTO `t_good` (
+	`goodName`,
+	`goodInfor`,
+	`goodTel`,
+	`goodDate`,
+	`goodLocal`,
+	`goodImage`,
+	`userId`,
+	`typeId`
+)
+VALUES
+	(
+		#{goodName},
+		#{goodInfor},
+		#{goodTel},
+		#{goodDate},
+		#{goodLocal},
+		#{goodImage},
+		#{user.userId},
+		#{type.typeId}
+
+	);
+
+
+ </insert>
+
+
+	<!-- 通过名字查找类型Id -->
+	<select id="queryIdByName" resultType="int">
+		select typeId from t_type where typeName = #{typeName}
+	</select>
+
+
+    <!-- 物品细节查询 -->
+    <select id="searchDetails" resultMap="mygood">
+SELECT
+	*
+FROM
+	t_good g,
+	t_user u,
+	t_type t
+WHERE
+	u.userId = g.userId
+AND g.typeId = t.typeId
+AND goodId = #{goodId}
+
+
+    </select>
+
+
+
+    <!-- 查询用户发布的物品  -->
+    <select id="queryGood" resultMap="mygood">
+
+        SELECT
+	*
+FROM
+	t_good g,
+	t_type t,
+	t_user u
+WHERE
+	g.userId = u.userId
+AND g.typeId = t.typeId
+AND u.userId = #{userId}
+
+    </select>
+
+
+    <!-- 删除用户发布的 -->
+   <delete id="deleteGood">
+       delete from t_good WHERE goodId=#{goodId};
+   </delete>
+
+
+
+
+</mapper>

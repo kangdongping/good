@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kdp.dao.HouseDAO">
+
+    <insert id="fabu">
+        INSERT INTO `house` (
+	`h_name`,
+	`h_type`,
+	`h_rect`,
+	`h_price`,
+	`h_date`,
+	`h_loc1`,
+	`h_loc2`,
+	`h_tel`,
+	`h_infor`,
+	`user_id`,
+	`h_img`
+)
+VALUES
+	(
+
+		#{hName},
+		#{hType},
+		#{hRect},
+		#{hPrice},
+		#{hDate},
+		#{hLoc1},
+		#{hLoc2},
+		#{hTel},
+		#{hInfor},
+		#{user.userId},
+		#{hImg}
+
+	);
+    </insert>
+
+    <select id="search" resultType="house">
+        select * from house
+        <where>
+            <if test="name!=null">
+                h_name like '%${name}%'
+            </if>
+            <if test="minRect!=null and maxRect!=null">
+                and h_rect between #{minRect} and #{maxRect}
+            </if>
+			<if test="minPrice!=null and maxPrice!=null">
+				and h_price between #{minPrice} and #{maxPrice}
+			</if>
+			<if test="sLocal!=null">
+				and h_loc2 like '%${sLocal}%'
+			</if>
+			<if test="sType!=null">
+				and h_type like '%${sType}%'
+			</if>
+        </where>
+    </select>
+
+    <select id="selectById" resultType="house">
+		select * from house where h_id=#{hId}
+	</select>
+
+
+    <delete id="delete">
+		delete from house where h_id=#{hId}
+	</delete>
+
+    <!--<update id="update">
+        update house
+        <set>
+            <if test="hName!=null">
+                h_name=#{hName},
+            </if>
+            <if test="type_id!=null">
+                h_type=#{type_id},
+            </if>
+            <if test="floorage!=null">
+                h_rect=#{floorage},
+            </if>
+            <if test="price!=null">
+                h_price=#{price},
+            </if>
+            <if test="houseDate!=null">
+                h_date=#{houseDate},
+            </if>
+            <if test="district_id!=null">
+                h_loc1=#{district_id},
+            </if>
+            <if test="street_id!=null">
+                h_loc2=#{street_id},
+            </if>
+            <if test="contact!=null">
+                h_tel=#{contact},
+            </if>
+            <if test="description!=null">
+                h_infor=#{description},
+            </if>
+            <if test="hImg!=null">
+                h_img=#{hImg}
+            </if>
+        </set>
+        where h_id = #{hId}
+    </update>-->
+
+
+
+</mapper>

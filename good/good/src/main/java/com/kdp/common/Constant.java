@@ -1,0 +1,5 @@
+package com.kdp.common;
+
+public class Constant {
+    public final static int PAGE_SIZE = 5;
+}
